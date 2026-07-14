@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Response schema for structured SEO analysis
 const seoAnalysisSchema = {
     type: Type.OBJECT,

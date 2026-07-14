@@ -18,6 +18,5 @@ interface AppContextType{
   login: (email: string, password: string)=> Promise<{success: boolean, message?:string}>
   register: (email: string, password: string)=> Promise<{success: boolean, message?:string}>
 }
-}
 
-const AppContext = createContext<AppContextType | undefined>(undefined)
+export const AppContext = createContext<AppContextType | undefined>(undefined);
