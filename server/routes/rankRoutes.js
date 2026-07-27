@@ -9,7 +9,7 @@ import { addkeyword, deletekeyword, getkeyword, getkeywords, refreshkeyword, tog
  rankRouter.get('/:id',auth, getkeyword,);
  rankRouter.post('/:id/refresh',auth, refreshkeyword,);
  rankRouter.put('/:id/toggle',auth, toggletracking,);
- rankRouter.delete('/:id/toggle',auth, deletekeyword,);
+ rankRouter.delete('/:id/delete',auth, deletekeyword,);
 
 
  export default rankRouter;

@@ -110,22 +110,75 @@ export default function RankTracker() {
 
     const handleRefresh = async (id: string) => {
         setRefreshing(id);
-        setTimeout(() => {
-            setRefreshing(null);
-        }, 1000);
+        try {
+            await api.post(`/api/rank/${id}/refresh`) 
+            //update status to check 
+            setKeywords((prev)=> prev.map((k)=>(k._id === id ? {...k, status: "checking"} : k)))
+
+            //poll for completion
+            
+                const pollInterval = setInterval(async ()=>{
+                    try {
+                        const check = await api.get(`/api/rank/${id}`);
+                        if(check.data.tracking.status !== "checking"){
+                            clearInterval(pollInterval)
+                            setKeywords((prev)=>prev.map((k)=>(k._id === id ? check.data.tracking: k)))
+                            setRefreshing(null)
+                        }
+                          
+
+
+                        
+                    } catch (error: any) {
+                        console.error(error);
+
+                        
+                        
+                    }
+
+                },3000);
+            }
+            
+
+            
+         catch (err) {
+            console.error("Refresh failed:", err );
+            setRefreshing(null)
+
+            
+        }
     };
 
     const handleDelete = async (id: string) => {
         if (!confirm("Delete this keyword tracking?")) return;
         setDeleting(id);
-        setTimeout(() => {
-            setDeleting(null);
-        }, 1000);
+        try {
+            await api.delete(`/api/rank/${id}/delete`);
+            setKeywords((prev)=> prev.filter((k) => k._id !== id))
+            
+        } catch (err) {
+            console.error("Delete failed:", err);
+            
+        }
+        setDeleting(null)
     };
 
     const handleToggle = async (id: string) => {
-        console.log(id);
+        try {
+            const res = await api.put(`/api/rank/${id}/toggle`)
+            if(res.data.success){
+                setKeywords((prev)=> prev.map((k) => (k._id === id ? {...k, active: res.data.tracking.active} : k)))
+
+            }
+          
+            
+        } catch (err) {
+            console.error("Togglefailed:", err);
+            
+        }
+        setDeleting(null)
     };
+    
 
     const getPositionBadge = (pos: number | null) => {
         if (pos === null) return { text: "Not Ranked", class: "text-muted-foreground bg-muted/50" };

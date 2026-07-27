@@ -36,6 +36,10 @@ export async function rankTracker (keyword, targetDomain ){
     for(let gPage = 0; gPage < 5; gPage++){
       await page.goto(`https://www.google.com/search?q=${encodeURIComponent(keyword)}&start=${gPage * 10}&num=10&hl=en&gl=us`, {waitUntil: "domcontentloaded",
     timeout: 30000,})
+      console.log("Search URL:", page.url());
+      console.log("Page Title:", await page.title());
+      console.log("HTML Length:", (await page.content()).length);
+
 
       //4. Pagew Extraction: Retry upto 3 times if results are missing
       let pageResults = [];
